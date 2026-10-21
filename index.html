@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>擬人和比喻小大師 🌟 - 小二中文修辭挑戰</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti for celebratory visual effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts: Fluent Cantonese readable rounded font -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            background: linear-gradient(135deg, #a8edd9 0%, #fed6e3 100%);
+            min-height: 100vh;
+        }
+
+        /* Custom Bounce Animations */
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9)); }
+        }
+
+        .pop-in {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+
+        /* Custom button styling for tactile kids-friendly feel */
+        .btn-3d {
+            transition: all 0.15s ease;
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-3d:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        /* Smooth timer progress bar */
+        .timer-bar {
+            transition: width 0.1s linear, background-color 0.3s ease;
+        }
+
+        /* Fun patterned background overlay */
+        .bg-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.4) 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-pattern flex flex-col justify-between items-center min-h-screen p-3 md:p-6 text-gray-800">
+
+    <!-- Header / Title Banner -->
+    <header class="w-full max-w-xl text-center my-2">
+        <div class="bg-white/80 backdrop-blur-md rounded-3xl p-3 shadow-lg border-4 border-amber-300 inline-block px-6">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-amber-600 flex items-center justify-center gap-2">
+                <span>🌟</span> 擬人和比喻小大師 <span>✨</span>
+            </h1>
+            <p class="text-xs sm:text-sm font-bold text-amber-700 mt-1">小二中文科每日 10 分鐘自主練習</p>
+        </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <main class="w-full max-w-xl my-auto">
+
+        <!-- 1. START SCREEN -->
+        <div id="start-screen" class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-sky-300 text-center pop-in">
+            <div class="text-6xl sm:text-7xl mb-4">📚🤖🌸</div>
+            <h2 class="text-2xl sm:text-3xl font-black text-sky-600 mb-3">準備好接受挑戰了嗎？</h2>
+            
+            <div class="bg-sky-50 rounded-2xl p-4 mb-6 text-left border-2 border-sky-200">
+                <h3 class="font-bold text-sky-800 text-base sm:text-lg mb-2 flex items-center gap-1">
+                    <span>💡</span> 玩法簡單提示：
+                </h3>
+                <ul class="text-sm sm:text-base text-sky-900 space-y-2 font-medium">
+                    <li class="flex items-start gap-2">
+                        <span class="bg-sky-200 text-sky-800 rounded-full px-2 py-0.5 text-xs font-bold mt-0.5">1</span>
+                        <span>每局共有 <b>10 題</b> 句子分辨題。</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="bg-sky-200 text-sky-800 rounded-full px-2 py-0.5 text-xs font-bold mt-0.5">2</span>
+                        <span>每題只有 <b>10 秒</b> 時間思考喔！</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="bg-sky-200 text-sky-800 rounded-full px-2 py-0.5 text-xs font-bold mt-0.5">3</span>
+                        <span>細心看清楚句子是用了<b>「擬人」</b>還是<b>「比喻」</b>！</span>
+                    </li>
+                </ul>
+            </div>
+
+            <button id="start-btn" onclick="startGame()" class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl sm:text-2xl py-4 rounded-2xl border-b-4 border-emerald-700 active:border-b-0 flex items-center justify-center gap-2 cursor-pointer">
+                <span>🚀</span> 開始挑戰！
+            </button>
+        </div>
+
+        <!-- 2. GAMEPLAY SCREEN -->
+        <div id="game-screen" class="hidden bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border-4 border-amber-300 pop-in">
+            
+            <!-- Progress & Score Header -->
+            <div class="flex justify-between items-center mb-3 text-sm sm:text-base font-bold text-gray-600">
+                <div class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full border border-amber-300 flex items-center gap-1">
+                    <span>📌</span> 第 <span id="current-question-num" class="text-lg text-amber-600 font-black">1</span> / 10 題
+                </div>
+                <div class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full border border-emerald-300 flex items-center gap-1">
+                    <span>🏆</span> 得分：<span id="current-score" class="text-lg text-emerald-600 font-black">0</span>
+                </div>
+            </div>
+
+            <!-- Timer Bar -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center text-xs sm:text-sm font-bold mb-1">
+                    <span class="text-gray-500 flex items-center gap-1">⏱️ 倒數時間</span>
+                    <span id="timer-text" class="text-amber-600 font-black text-base">10 秒</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden p-0.5 border border-gray-300">
+                    <div id="timer-bar" class="timer-bar bg-emerald-500 h-full rounded-full w-full"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-amber-50 rounded-2xl p-5 sm:p-6 mb-6 text-center border-2 border-amber-200 min-h-[140px] flex flex-col justify-center items-center shadow-inner relative">
+                <span class="absolute -top-3 left-4 bg-amber-400 text-amber-900 text-xs font-black px-3 py-0.5 rounded-full shadow">請問這句話用了什麼修辭？</span>
+                <p id="question-text" class="text-xl sm:text-2xl md:text-3xl font-black text-gray-800 leading-relaxed my-2">
+                    正在載入題目...
+                </p>
+            </div>
+
+            <!-- Answer Buttons -->
+            <div class="grid grid-cols-2 gap-4 mb-2">
+                <button onclick="checkAnswer('擬人')" class="btn-3d bg-indigo-500 hover:bg-indigo-600 text-white font-black text-xl sm:text-2xl py-5 rounded-2xl border-b-4 border-indigo-700 active:border-b-0 flex flex-col items-center justify-center gap-1 cursor-pointer">
+                    <span class="text-3xl">🤖</span>
+                    <span>擬 人</span>
+                </button>
+                <button onclick="checkAnswer('比喻')" class="btn-3d bg-pink-500 hover:bg-pink-600 text-white font-black text-xl sm:text-2xl py-5 rounded-2xl border-b-4 border-pink-700 active:border-b-0 flex flex-col items-center justify-center gap-1 cursor-pointer">
+                    <span class="text-3xl">🌙</span>
+                    <span>比 喻</span>
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- 3. FEEDBACK MODAL (Immediate Explanations) -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-40 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border-4 text-center pop-in relative" id="feedback-card">
+            <div id="feedback-icon" class="text-6xl sm:text-7xl mb-2">🎉</div>
+            <h3 id="feedback-title" class="text-2xl sm:text-3xl font-black mb-3">答對了！</h3>
+            
+            <div id="feedback-explanation-box" class="bg-gray-50 rounded-2xl p-4 mb-6 border-2 text-left">
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">💡 小導師解說</div>
+                <p id="feedback-explanation" class="text-base sm:text-lg text-gray-700 font-bold leading-snug">
+                    解說內容...
+                </p>
+            </div>
+
+            <button onclick="nextQuestion()" class="btn-3d w-full bg-amber-500 hover:bg-amber-600 text-white font-black text-xl py-3.5 rounded-2xl border-b-4 border-amber-700 active:border-b-0 flex items-center justify-center gap-2 cursor-pointer">
+                <span>下一題</span> ➔
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. SUMMARY MODAL (End Game Score Window) -->
+    <div id="summary-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border-4 border-amber-400 text-center pop-in">
+            <div id="summary-badge" class="text-6xl sm:text-7xl mb-2 pulse-glow">👑</div>
+            <h2 class="text-2xl sm:text-3xl font-black text-gray-800 mb-1">挑戰完成！</h2>
+            <p id="summary-eval" class="text-amber-600 font-black text-lg sm:text-xl mb-4">你是修辭小超人！</p>
+            
+            <!-- Score Card -->
+            <div class="bg-amber-50 rounded-2xl p-4 mb-6 border-2 border-amber-200">
+                <p class="text-sm font-bold text-gray-600 mb-1">本次得分</p>
+                <div class="text-4xl sm:text-5xl font-black text-amber-500">
+                    <span id="final-score">0</span> <span class="text-2xl text-gray-400 font-normal">/ 10</span>
+                </div>
+            </div>
+
+            <button onclick="restartGame()" class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl py-4 rounded-2xl border-b-4 border-emerald-700 active:border-b-0 flex items-center justify-center gap-2 cursor-pointer">
+                <span>🔄</span> 再玩一次
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full text-center my-2 text-xs sm:text-sm text-gray-600 font-bold">
+        適合香港小學二年級中文科學習 ‧ 擬人與比喻特別訓練
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. Audio Synthesizer (Web Audio API) ---
+        // Avoids external MP3 dependencies, guarantees instant sound anywhere
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    // Cheerful Arpeggio (C5 -> E5 -> G5 -> C6)
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
+                    
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } else if (type === 'wrong') {
+                    // Gentle Low Buzz (G3 -> E3)
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(196.00, now); // G3
+                    osc.frequency.setValueAtTime(164.81, now + 0.15); // E3
+
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'timeout') {
+                    // Clock-like double warning
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.setValueAtTime(200, now + 0.15);
+
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                }
+            } catch (e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        // --- 2. Comprehensive P.2 Question Bank ---
+        const questionBank = [
+            // 擬人句 (Personification)
+            {
+                text: "太陽公公每天早上都向我們微微笑。",
+                type: "擬人",
+                explanation: "把「太陽」當作人一樣會「微笑」，所以是擬人喔！"
+            },
+            {
+                text: "風兒在樹葉之間快樂地唱歌。",
+                type: "擬人",
+                explanation: "把「風」當作人一樣會「唱歌」，所以是擬人喔！"
+            },
+            {
+                text: "小草向著陽光伸伸懶腰。",
+                type: "擬人",
+                explanation: "把「小草」當作人一樣會「伸懶腰」，所以是擬人喔！"
+            },
+            {
+                text: "鬧鐘大聲呼喚我起來上學。",
+                type: "擬人",
+                explanation: "把「鬧鐘」當作人一樣會「呼喚」，所以是擬人喔！"
+            },
+            {
+                text: "小溪在山谷裡奔跑著。",
+                type: "擬人",
+                explanation: "把「小溪」當作人一樣會「奔跑」，所以是擬人喔！"
+            },
+            {
+                text: "花兒穿上了彩色的新衣服。",
+                type: "擬人",
+                explanation: "把「花兒」當作人一樣會「穿衣服」，所以是擬人喔！"
+            },
+            {
+                text: "星星在夜空中眨眼睛。",
+                type: "擬人",
+                explanation: "把「星星」當作人一樣會「眨眼睛」，所以是擬人喔！"
+            },
+            {
+                text: "海浪輕輕拍打著沙灘。",
+                type: "擬人",
+                explanation: "把「海浪」當作人一樣會「拍打」，所以是擬人喔！"
+            },
+            {
+                text: "小樹苗在雨水中開心地跳舞。",
+                type: "擬人",
+                explanation: "把「小樹苗」當作人一樣會「跳舞」，所以是擬人喔！"
+            },
+            {
+                text: "雲朵在天上悠閒地散步。",
+                type: "擬人",
+                explanation: "把「雲朵」當作人一樣會「散步」，所以是擬人喔！"
+            },
+
+            // 比喻句 (Simile / Metaphor)
+            {
+                text: "彎彎的月亮像一條小船。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「月亮」比作「小船」，所以是比喻喔！"
+            },
+            {
+                text: "妹妹的臉蛋紅得像個大蘋果。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「臉蛋」比作「蘋果」，所以是比喻喔！"
+            },
+            {
+                text: "小溪像一條長長的銀色絲帶。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「小溪」比作「絲帶」，所以是比喻喔！"
+            },
+            {
+                text: "雨滴像一顆顆閃亮的珍珠掉下來。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「雨滴」比作「珍珠」，所以是比喻喔！"
+            },
+            {
+                text: "大樹像一把綠色的大傘為我們遮太陽。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「大樹」比作「大傘」，所以是比喻喔！"
+            },
+            {
+                text: "白雲像軟綿綿的棉花糖。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「白雲」比作「棉花糖」，所以是比喻喔！"
+            },
+            {
+                text: "湖水平靜得像一面大鏡子。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「湖水」比作「鏡子」，所以是比喻喔！"
+            },
+            {
+                text: "弟弟跑得很快，好像一隻小豹子。",
+                type: "比喻",
+                explanation: "出現了「好像」，把「弟弟」比作「小豹子」，所以是比喻喔！"
+            },
+            {
+                text: "落葉好像一隻隻黃色的蝴蝶在飛舞。",
+                type: "比喻",
+                explanation: "出現了「好像」，把「落葉」比作「蝴蝶」，所以是比喻喔！"
+            },
+            {
+                text: "彩虹像一座美麗的七彩橋。",
+                type: "比喻",
+                explanation: "出現了「像」字，把「彩虹」比作「七彩橋」，所以是比喻喔！"
+            }
+        ];
+
+        // --- 3. Game State Variables ---
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let timer = null;
+        const TIME_LIMIT = 10; // 10 seconds per question
+        let timeLeft = TIME_LIMIT;
+
+        // --- 4. Game Flow Controls ---
+        function startGame() {
+            initAudio();
+            // Shuffle and pick 10 questions
+            currentQuestions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 10);
+            currentIndex = 0;
+            score = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('summary-modal').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= currentQuestions.length) {
+                endGame();
+                return;
+            }
+
+            // Update Header Stats
+            document.getElementById('current-question-num').innerText = currentIndex + 1;
+            document.getElementById('current-score').innerText = score;
+
+            // Render Current Question Text
+            const q = currentQuestions[currentIndex];
+            document.getElementById('question-text').innerText = `「${q.text}」`;
+
+            // Reset & Start Timer
+            resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = TIME_LIMIT;
+            updateTimerUI();
+
+            timer = setInterval(() => {
+                timeLeft -= 0.1;
+                if (timeLeft <= 0) {
+                    timeLeft = 0;
+                    clearInterval(timer);
+                    handleTimeout();
+                }
+                updateTimerUI();
+            }, 100);
+        }
+
+        function updateTimerUI() {
+            const bar = document.getElementById('timer-bar');
+            const text = document.getElementById('timer-text');
+            
+            const percentage = (timeLeft / TIME_LIMIT) * 100;
+            bar.style.width = `${percentage}%`;
+            text.innerText = `${Math.ceil(timeLeft)} 秒`;
+
+            // Change Timer Color dynamically based on urgency
+            if (percentage > 50) {
+                bar.className = 'timer-bar bg-emerald-500 h-full rounded-full';
+                text.className = 'text-emerald-600 font-black text-base';
+            } else if (percentage > 25) {
+                bar.className = 'timer-bar bg-amber-500 h-full rounded-full';
+                text.className = 'text-amber-600 font-black text-base';
+            } else {
+                bar.className = 'timer-bar bg-rose-500 h-full rounded-full';
+                text.className = 'text-rose-600 font-black text-base animate-pulse';
+            }
+        }
+
+        function checkAnswer(userAnswer) {
+            clearInterval(timer);
+            const q = currentQuestions[currentIndex];
+
+            if (userAnswer === q.type) {
+                // Correct Answer
+                score++;
+                playSound('correct');
+                showConfetti();
+                showFeedback(true, `答對了！太棒了！`, q.explanation);
+            } else {
+                // Wrong Answer
+                playSound('wrong');
+                showFeedback(false, `差一點點！答案是「${q.type}」喔！`, q.explanation);
+            }
+        }
+
+        function handleTimeout() {
+            playSound('timeout');
+            const q = currentQuestions[currentIndex];
+            showFeedback(false, `時間到囉！答案是「${q.type}」！`, q.explanation);
+        }
+
+        function showFeedback(isCorrect, title, explanation) {
+            const modal = document.getElementById('feedback-modal');
+            const card = document.getElementById('feedback-card');
+            const icon = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            const explEl = document.getElementById('feedback-explanation');
+            const explBox = document.getElementById('feedback-explanation-box');
+
+            if (isCorrect) {
+                card.className = "bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border-4 border-emerald-400 text-center pop-in";
+                icon.innerText = "🌟";
+                titleEl.innerText = title;
+                titleEl.className = "text-2xl sm:text-3xl font-black text-emerald-600 mb-3";
+                explBox.className = "bg-emerald-50 rounded-2xl p-4 mb-6 border-2 border-emerald-200 text-left";
+            } else {
+                card.className = "bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border-4 border-rose-400 text-center pop-in";
+                icon.innerText = "💡";
+                titleEl.innerText = title;
+                titleEl.className = "text-2xl sm:text-3xl font-black text-rose-600 mb-3";
+                explBox.className = "bg-rose-50 rounded-2xl p-4 mb-6 border-2 border-rose-200 text-left";
+            }
+
+            explEl.innerText = explanation;
+            modal.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            document.getElementById('game-screen').classList.add('hidden');
+
+            const summaryModal = document.getElementById('summary-modal');
+            const finalScoreEl = document.getElementById('final-score');
+            const badgeEl = document.getElementById('summary-badge');
+            const evalEl = document.getElementById('summary-eval');
+
+            finalScoreEl.innerText = score;
+
+            // Tailored encourage message & badge according to score
+            if (score === 10) {
+                badgeEl.innerText = "🏆";
+                evalEl.innerText = "完美！你是修辭小大師！";
+                evalEl.className = "text-amber-500 font-black text-xl sm:text-2xl mb-4";
+                triggerFinalCelebration();
+            } else if (score >= 8) {
+                badgeEl.innerText = "🥇";
+                evalEl.innerText = "太厲害了！表現非常出色！";
+                evalEl.className = "text-emerald-600 font-black text-xl sm:text-2xl mb-4";
+            } else if (score >= 6) {
+                badgeEl.innerText = "🥈";
+                evalEl.innerText = "做得好！再接再厲會更棒！";
+                evalEl.className = "text-sky-600 font-black text-xl sm:text-2xl mb-4";
+            } else {
+                badgeEl.innerText = "👏";
+                evalEl.innerText = "加油！每天練習一定會進步！";
+                evalEl.className = "text-indigo-600 font-black text-xl sm:text-2xl mb-4";
+            }
+
+            summaryModal.classList.remove('hidden');
+        }
+
+        function restartGame() {
+            document.getElementById('summary-modal').classList.add('hidden');
+            startGame();
+        }
+
+        // --- 5. Visual Confetti Effects ---
+        function showConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+            }
+        }
+
+        function triggerFinalCelebration() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
